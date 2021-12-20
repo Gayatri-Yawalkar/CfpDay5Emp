@@ -6,30 +6,45 @@ import com.bridgelabz.employeepayroll.dto.EmployeePayrollDto;
 import com.bridgelabz.employeepayroll.model.EmployeePayrollData;
 @Service
 public class EmployeePayrollService implements IEmployeePayrollService{
-	List<EmployeePayrollDto> empDataList=new ArrayList<EmployeePayrollDto>();
+	private List<EmployeePayrollData> employeePayrollList=new ArrayList<EmployeePayrollData>();
 	@Override
-	public List<EmployeePayrollDto> getEmployeePayrolldata() {
-		empDataList.add(1,new EmployeePayrollDto("Gayo",30010));
-		return empDataList;
+	public List<EmployeePayrollData> getEmployeePayrolldata() {
+		return employeePayrollList;
 	}
 	@Override
-	public EmployeePayrollDto getEmployeePayrollDataById(int empId) {
-		EmployeePayrollDto empData=null;
-		empData=empDataList.get(empId);
+	public EmployeePayrollData getEmployeePayrollDataById(int empId) {
+		try {
+			return employeePayrollList.get(empId-1);
+		} catch(IndexOutOfBoundsException e) {
+			return null;
+		}
+	}
+	@Override
+	public EmployeePayrollData createEmployeePayrollData(EmployeePayrollDto employeePayrollDto) {
+		EmployeePayrollData empData=null;
+		empData=new EmployeePayrollData(employeePayrollList.size()+1,employeePayrollDto);
+		employeePayrollList.add(empData);
 		return empData;
 	}
 	@Override
-	public EmployeePayrollDto createEmployeePayrollData(EmployeePayrollDto employeePayrollDto) {
-		empDataList.add(employeePayrollDto);
-		return employeePayrollDto;
+	public EmployeePayrollData updateEmployeePayrollData(int empId,EmployeePayrollDto employeePayrollDto) {
+		try {
+			EmployeePayrollData empData=this.getEmployeePayrollDataById(empId);
+			empData.setName(employeePayrollDto.name);
+			empData.setSalary(employeePayrollDto.salary);
+			employeePayrollList.set(empId-1,empData);
+			return empData;
+		} catch(IndexOutOfBoundsException e) {
+			return null;
+		}
 	}
 	@Override
-	public EmployeePayrollDto updateEmployeePayrollData(EmployeePayrollDto employeePayrollDto) {
-		empList.set(1,employeePayrollDto);
-		return employeePayrollDto;
-	}
-	@Override
-	public void deleteEmployeePayrollData(int empId) {
-		empList.remove(empId);
+	public int deleteEmployeePayrollData(int empId) {
+		try {
+			employeePayrollList.remove(empId-1);
+			return 1;
+		} catch(IndexOutOfBoundsException e) {
+			return 0;
+		}
 	}
 }

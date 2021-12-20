@@ -1,5 +1,7 @@
 package com.bridgelabz.employeepayroll.model;
+
 import com.bridgelabz.employeepayroll.dto.EmployeePayrollDto;
+
 public class EmployeePayrollData {
 	private int employeeId;
 	private String name;

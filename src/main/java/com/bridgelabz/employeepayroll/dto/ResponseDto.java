@@ -1,21 +1,24 @@
 package com.bridgelabz.employeepayroll.dto;
 public class ResponseDto {
 	private String message;
-	private Object data;
-	public ResponseDto(String message,Object data) {
+	private Object name;
+	public ResponseDto(String message,Object name) {
 		this.message=message;
-		this.data=data;
+		this.name=name;
 	}
-	public String getMessage() {
-		return message;
+	public ResponseDto(String message) {
+		this.message=message;
 	}
-	public void setMessage(String message) {
-		this.message = message;
+	public String getMessage() { 
+		 return message; 
+	} 
+	public void setMessage(String message) { 
+		this.message = message; 
 	}
-	public Object getData() {
-		return data;
+	public Object getName() {
+		return name;
 	}
-	public void setData(Object data) {
-		this.data = data;
+	public void setName(Object name) {
+		this.name = name;
 	}
 }

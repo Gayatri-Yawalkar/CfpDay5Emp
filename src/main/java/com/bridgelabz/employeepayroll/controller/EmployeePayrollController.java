@@ -22,36 +22,48 @@ public class EmployeePayrollController {
 	private IEmployeePayrollService employeePayrollService;
 	@RequestMapping(value= {"","/","/get"})
 	public ResponseEntity<ResponseDto> getEmployeeData() {
-		List<EmployeePayrollData> empDataList=null;
-		empDataList=employeePayrollService.getEmployeePayrolldata();
-		ResponseDto respDto=new ResponseDto("Get Call Success",empDataList);
+		List<EmployeePayrollData> employeePayrollDataList=employeePayrollService.getEmployeePayrolldata();
+		ResponseDto respDto=new ResponseDto("Get Call Success",employeePayrollDataList);
 		return new ResponseEntity<ResponseDto>(respDto,HttpStatus.OK);
 	}
 	@GetMapping("/get/{empId}")
 	public ResponseEntity<ResponseDto> getEmployeeData(@PathVariable("empId") int empId) {
-		EmployeePayrollData empData=null;
-		empData=employeePayrollService.getEmployeePayrollDataById(empId);
-		ResponseDto respDto=new ResponseDto("Get Call For Id Success",empData);
-		return new ResponseEntity<ResponseDto>(respDto,HttpStatus.OK);
+		ResponseDto respDto;
+		EmployeePayrollData employeePayrollData=employeePayrollService.getEmployeePayrollDataById(empId);
+		if(employeePayrollData!=null) {
+			respDto=new ResponseDto("Get Call For Id Success",employeePayrollData.getName());
+			return new ResponseEntity<ResponseDto>(respDto,HttpStatus.OK);
+		} else {
+			respDto=new ResponseDto("Id is not Present");
+			return new ResponseEntity<ResponseDto>(respDto,HttpStatus.NOT_FOUND);
+		}
 	}
 	@PostMapping("/create")
 	public ResponseEntity<ResponseDto> addEmployeeData(@RequestBody EmployeePayrollDto employeePayrolldto) {
-		EmployeePayrollData empData=null;
-		empData=employeePayrollService.createEmployeePayrollData(employeePayrolldto);
-		ResponseDto respDto=new ResponseDto("Created Employee Payroll Data Successfully",empData);
+		employeePayrollService.createEmployeePayrollData(employeePayrolldto);
+		ResponseDto respDto=new ResponseDto("Created Employee Payroll Data Successfully");
 		return new ResponseEntity<ResponseDto>(respDto,HttpStatus.OK);
 	}
-	@PutMapping("/update")
-	public ResponseEntity<ResponseDto> updateEmployeeData(@RequestBody EmployeePayrollDto employeePayrolldto) {
-		EmployeePayrollData empData=null;
-		empData=employeePayrollService.updateEmployeePayrollData(employeePayrolldto);
-		ResponseDto respDto=new ResponseDto("Updated Employee Payroll Data Successfully",empData);
-		return new ResponseEntity<ResponseDto>(respDto,HttpStatus.OK);
+	@PutMapping("/update/{empId}")
+	public ResponseEntity<ResponseDto> updateEmployeeData(@PathVariable("empId") int empId,@RequestBody EmployeePayrollDto employeePayrolldto) {
+		ResponseDto respDto;
+		if(employeePayrollService.updateEmployeePayrollData(empId,employeePayrolldto)!=null) {
+			respDto=new ResponseDto("Updated Employee Payroll Data Successfully");
+			return new ResponseEntity<ResponseDto>(respDto,HttpStatus.OK);
+		} else {
+			respDto=new ResponseDto("Id is not Present");
+			return new ResponseEntity<ResponseDto>(respDto,HttpStatus.NOT_FOUND);
+		}
 	}
 	@DeleteMapping("/delete/{empId}")
 	public ResponseEntity<ResponseDto> deleteEmployeeData(@PathVariable("empId") int empId) {
-		employeePayrollService.deleteEmployeePayrollData(empId);
-		ResponseDto respDto=new ResponseDto("Deleted Successfully","Deleted id:"+empId);
-		return new ResponseEntity<ResponseDto>(respDto,HttpStatus.OK);
+		ResponseDto respDto;
+		if(employeePayrollService.deleteEmployeePayrollData(empId)!=0) {
+			respDto=new ResponseDto("Deleted Successfully id:"+empId);
+			return new ResponseEntity<ResponseDto>(respDto,HttpStatus.OK);
+		} else {
+			respDto=new ResponseDto("Id is not Present");
+			return new ResponseEntity<ResponseDto>(respDto,HttpStatus.NOT_FOUND);
+		}
 	}
 }	
